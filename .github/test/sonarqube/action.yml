@@ -8,10 +8,12 @@ runs:
     shell: bash
   - name: Sonar qualityGate
     run: mvn sonar:sonar sonar-quality-gate:check -Dsonar.qualitygate.wait=true -Dsonar.projectKey=springboot-demoapp -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN
+    continue-on-error: true
     shell: bash
   - name: qualityGate status
     run: |
-        qualityGateStatus="$(curl --location  --max-redirs 10 --silent --fail --show-error --user "squ_a508d8eb6450c40f8e0ba11d44a0f370ba2b2115": "$SONAR_URL/api/qualitygates/project_status?analysisId=AY-Ve2y32O7nqr0-pDrF" | jq -r '.projectStatus.status')"
+        cat report-task.txt
+        qualityGateStatus="$(curl --location  --max-redirs 10 --silent --fail --show-error --user "$SONAR_TOKEN": "$SONAR_URL/api/qualitygates/project_status?analysisId=AY-Ve2y32O7nqr0-pDrF" | jq -r '.projectStatus.status')"
         if [[ ${qualityGateStatus} == "ERROR" ]]; then
         echo "Quality Gate FAILED"
         exit 1
