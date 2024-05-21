@@ -4,7 +4,7 @@ runs:
  using: "composite"
  steps:
   - name: SonarQube Scan
-    run: mvn clean package sonar:sonar -Dsonar.projectKey=spring-boot-demoapp -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.host.url=${{ vars.SONAR_URL }} -Dsonar.login=${{ vars.SONAR_TOKEN }}
+    run: mvn clean package sonar:sonar -Dsonar.projectKey=spring-boot-demoapp -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN
     shell: bash
   - name: Sonar qualityGate
     run: mvn sonar:sonar sonar-quality-gate:check -Dsonar.qualitygate.wait=true -Dsonar.projectKey=springboot-demoapp -Dsonar.host.url=${{ SONAR_URL }} -Dsonar.login=${{ SONAR_TOKEN }}
