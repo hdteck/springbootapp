@@ -7,7 +7,7 @@ runs:
     run: mvn clean package sonar:sonar -Dsonar.projectKey=spring-boot-demoapp -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN
     shell: bash
   - name: Sonar qualityGate
-    run: mvn sonar:sonar sonar-quality-gate:check -Dsonar.qualitygate.wait=true -Dsonar.projectKey=springboot-demoapp -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN
+    run: mvn sonar-quality-gate:check -Dsonar.qualitygate.wait=true -Dsonar.projectKey=springboot-demoapp -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN
     continue-on-error: true
     shell: bash
   - name: qualityGate status
