@@ -12,7 +12,7 @@ runs:
     shell: bash
   - name: qualityGate status
     run: |
-        cat report-task.txt
+        whereis report-task.txt
         qualityGateStatus="$(curl --location  --max-redirs 10 --silent --fail --show-error --user "$SONAR_TOKEN": "$SONAR_URL/api/qualitygates/project_status?analysisId=AY-Ve2y32O7nqr0-pDrF" | jq -r '.projectStatus.status')"
         if [[ ${qualityGateStatus} == "ERROR" ]]; then
         echo "Quality Gate FAILED"
