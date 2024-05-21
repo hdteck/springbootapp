@@ -4,14 +4,14 @@ runs:
  using: "composite"
  steps:
   - name: SonarQube Scan
-    run: mvn clean package sonar:sonar -Dsonar.projectKey=spring-boot-demoapp -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.host.url=http://20.73.170.166:9000 -Dsonar.login=squ_a508d8eb6450c40f8e0ba11d44a0f370ba2b2115
+    run: mvn clean package sonar:sonar -Dsonar.projectKey=spring-boot-demoapp -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.host.url=$sonar_url -Dsonar.login=$sonar_token
     shell: bash
   - name: Sonar qualityGate
-    run: mvn sonar:sonar sonar-quality-gate:check -Dsonar.qualitygate.wait=true -Dsonar.projectKey=springboot-demoapp -Dsonar.host.url=http://20.73.170.166:9000 -Dsonar.login=squ_a508d8eb6450c40f8e0ba11d44a0f370ba2b2115
+    run: mvn sonar:sonar sonar-quality-gate:check -Dsonar.qualitygate.wait=true -Dsonar.projectKey=springboot-demoapp -Dsonar.host.url=$sonar_url -Dsonar.login=$sonar_token
     shell: bash
   - name: qualityGate status
     run: |
-        qualityGateStatus="$(curl --location  --max-redirs 10 --silent --fail --show-error --user "squ_a508d8eb6450c40f8e0ba11d44a0f370ba2b2115": "http://20.73.170.166:9000/api/qualitygates/project_status?analysisId=AY-Ve2y32O7nqr0-pDrF" | jq -r '.projectStatus.status')"
+        qualityGateStatus="$(curl --location  --max-redirs 10 --silent --fail --show-error --user "squ_a508d8eb6450c40f8e0ba11d44a0f370ba2b2115": "$sonar_url/api/qualitygates/project_status?analysisId=AY-Ve2y32O7nqr0-pDrF" | jq -r '.projectStatus.status')"
         if [[ ${qualityGateStatus} == "ERROR" ]]; then
         echo "Quality Gate FAILED"
         exit 1
