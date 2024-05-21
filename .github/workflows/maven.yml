@@ -42,9 +42,9 @@ jobs:
       uses: ./.github/test/junit/
     - name: sonarqube          
       uses: ./.github/test/sonarqube/
-#      with:
-#        SONAR_TOKEN: ${{ secrets.SONAR_SECRET }}
-#        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  
+      with:
+        SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
+        SONAR_URL: ${{ vars.SONAR_URL }}  
 #    - name: cobertura-unit-test
 #      uses: ./.github/test/cobertura/ 
 
