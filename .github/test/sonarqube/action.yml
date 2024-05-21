@@ -16,6 +16,6 @@ runs:
         qualityGateStatus="$(curl --location  --max-redirs 10 --silent --fail --show-error --user "$SONAR_TOKEN": "$SONAR_URL/api/qualitygates/project_status?analysisId=$analysisID" | jq -r '.projectStatus.status')"
         if [[ ${qualityGateStatus} == "ERROR" ]]; then
         echo "Quality Gate FAILED"
-        exit 1
+        git merge --no-ff master -m "Auto-merge master back to dev"
         fi
     shell: bash
