@@ -1,0 +1,11 @@
+name: junit test
+description: ejecución de test unitarios
+runs:
+  using: "composite"
+  steps:
+    - name: Maven test
+      run: mvn -B test --file pom.xml
+      shell: bash
+    - name: Publish Test Report
+      if: success() || failure()
+      uses: scacap/action-surefire-report@v1 

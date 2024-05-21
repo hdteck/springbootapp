@@ -1,0 +1,24 @@
+name: comprobaciones bash
+description: comprobamos si los ficheros existen
+runs:
+ using: "composite"
+ steps:
+  - name: 'Check pom.xml exits'
+    run: |
+      if [ ! -f "${GITHUB_WORKSPACE}/pom.xml" ]; then
+      echo "el fichero pom.xml no existe en el espacio de trabajo ${GITHUB_WORKSPACE}"
+      fi
+    shell: bash
+  - name: 'Check test classes'
+    run: |
+      if [ ! -f "${GITHUB_WORKSPACE}/src/test" ]; then
+      echo "no esta creado el directorio de test"
+      fi
+    shell: bash
+#  -  name: 'install java11 tools'
+#     run: |
+#       wget http://www.java2s.com/Code/JarDownload/tools/tools-1.8.0.jar.zip && unzip tools-1.8.0.jar.zip && cp tools-1.8.0.jar /opt/hostedtoolcache/Java_Zulu_jdk/11.0.23-9/x64/lib/tools.jar
+#       ls -lrt /opt/hostedtoolcache/Java_Zulu_jdk/11.0.23-9/x64
+#       echo $JAVA_HOME
+#     shell: bash
+  

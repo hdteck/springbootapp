@@ -1,0 +1,32 @@
+name: cobertura unit test
+description: ejecución de test unitarios de cobertura
+runs:
+  using: "composite"
+  steps:
+    - name: cobertura unit test
+      run: mvn '-Dtest=!*IntegrationTest' verify -Djacoco.destFile=./.github/test/cobertura/jacoco-fast.exec --file=pom.xml
+      shell: bash
+    - name: Upload jacoco exec results
+      uses: actions/upload-artifact@v2
+      with:
+        name: unit-tests-jacoco
+        path: ./.github/test/cobertura/jacoco-fast.exec
+    - name: cobertura integration test
+      run: mvn '-Dtest=!*IntegrationTest' verify -Djacoco.destFile=./.github/test/cobertura/jacoco-slow-it.exec --file=pom.xml
+      shell: bash
+    - name: Upload jacoco exec results
+      uses: actions/upload-artifact@v2
+      with:
+        name: integration-tests-jacoco
+        path: ./.github/test/cobertura/jacoco-slow-it.exec
+    - name: merge results
+      run: |
+          mvn jacoco:merge package jacoco:report verify -DskipTests=true -Dsonar.projectKey=springboot-app -Dsonar.host.url=http://20.73.170.166:9000 -Dsonar.login=sqp_19c6583bbd94f96b43733912819148f6cd6ec65b
+      shell: bash
+    - name: Upload jacoco coverage despite the check result
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage-results-report
+        path: ./
+        if-no-files-found: error
