@@ -12,8 +12,8 @@ runs:
     shell: bash
   - name: qualityGate status
     run: |
-        cat target/sonar/report-task.txt
-        qualityGateStatus="$(curl --location  --max-redirs 10 --silent --fail --show-error --user "$SONAR_TOKEN": "$SONAR_URL/api/qualitygates/project_status?analysisId=AY-Ve2y32O7nqr0-pDrF" | jq -r '.projectStatus.status')"
+        analysisID="$(cat target/sonar/report-task.txt |grep ceTaskId |awk -F= '{print $2}')
+        qualityGateStatus="$(curl --location  --max-redirs 10 --silent --fail --show-error --user "$SONAR_TOKEN": "$SONAR_URL/api/qualitygates/project_status?analysisId=$analysisID" | jq -r '.projectStatus.status')"
         if [[ ${qualityGateStatus} == "ERROR" ]]; then
         echo "Quality Gate FAILED"
         exit 1
