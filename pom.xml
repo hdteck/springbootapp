@@ -6,9 +6,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>es.ua.mads</groupId>
-    <artifactId>spring-boot-demoapp</artifactId>
+    <artifactId>springbootapp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-boot-demoapp</name>
+    <name>springbootapp</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
