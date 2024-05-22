@@ -14,6 +14,7 @@ runs:
     run: |
         analysisID=`cat target/sonar/report-task.txt |grep ceTaskId |awk -F= '{ print $2 }'`
         qualityGateStatus="$(curl --location  --max-redirs 10 --silent --fail --show-error --user "$SONAR_TOKEN": "$SONAR_URL/api/qualitygates/project_status?analysisId=$analysisID" | jq -r '.projectStatus.status')"
+        echo $qualityGateStatus
         if [[ ${qualityGateStatus} == "ERROR" ]]; then
         echo "Quality Gate FAILED"
         git merge --no-ff master -m "Auto-merge master back to dev"
