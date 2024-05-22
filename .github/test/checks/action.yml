@@ -16,7 +16,7 @@ runs:
       fi
     shell: bash
   - name: 'limpieza de la ejecucion anterior'
-    run: mvn clean:clean
+    run: rm -rf target/
     shell: bash
     
   
