@@ -21,7 +21,7 @@ on:
 
 jobs:
   check-qa-feature:
-    if: ${{ startsWith(github.ref, 'refs/tags/feature**') }}
+    if: ${{ contains(github.ref, 'feature') }}
     runs-on: ubuntu-latest
     env:
       SONAR_URL: ${{ vars.SONAR_URL}}
@@ -52,7 +52,7 @@ jobs:
           SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
           SONAR_URL: ${{ vars.SONAR_URL }}
   automerge:
-    if: ${{ startsWith(github.ref, 'refs/tags/feature*') }}
+    if: ${{ contains(github.ref, 'feature') }}
     runs-on: ubuntu-latest
     env:
         SONAR_URL: ${{ vars.SONAR_URL}}
@@ -68,7 +68,7 @@ jobs:
           PULL_REQUEST: "${{ github.event.pull_request.number }}"
           LOG: "DEBUG"
   check-qa-build:
-    if: ${{ startsWith(github.ref, 'refs/tags/dev**') }}
+    if: ${{ contains(github.ref, 'dev') }}
     runs-on: ubuntu-latest
     env:
       SONAR_URL: ${{ vars.SONAR_URL}}
