@@ -7,6 +7,7 @@ Aplicación básica usando Spring Boot y plantillas Thymeleaf.
 Necesitas tener instalado en tu sistema:
 
 - Java 17
+- Maven 3
 
 ## Ejecución
 
