@@ -54,7 +54,7 @@ jobs:
   automerge:
     if: ${{ startsWith(github.ref, 'refs/tags/feature*') }}
     runs-on: ubuntu-latest
-      env:
+    env:
         SONAR_URL: ${{ vars.SONAR_URL}}
         SONAR_TOKEN: ${{ vars.SONAR_TOKEN}}
       steps:
