@@ -53,10 +53,11 @@ jobs:
       uses: "gsoc2/automerge-action@v0.16.2"
       env:
         GITHUB_TOKEN: "${{ secrets.TOKEN_PULLREQ }}"
-        MERGE_LABELS: "Automerge- ${{ github.event.issue.number }}"
-        MERGE_COMMIT_MESSAGE: "Pullrequest- ${{ github.event.issue.number }}"
+        MERGE_LABELS: "Automerge-${{ github.event.issue.number }}"
+        MERGE_COMMIT_MESSAGE: "Pullrequest-${{ github.event.issue.number }}"
         MERGE_REQUIRED_APPROVALS: "0" 
-        MERGE_METHOD: "rebase"   
+        MERGE_METHOD: "rebase"
+        PULL_REQUEST: "${{github.event.issue.number}}"
+        LOG: "DEBUG"   
 #    - name: cobertura-unit-test
 #      uses: ./.github/test/cobertura/ 
-
