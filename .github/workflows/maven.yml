@@ -9,56 +9,95 @@
 name: SprintBoot app
 
 on:
-#  push:
-#    branches: [ "develop" ]
+  #  push:
+  #    branches: [ "develop" ]
   pull_request:
-    branches: [ "develop" ]
+    branches: ["develop"]
     types:
       - opened
       - edited
       - synchronize
+      - closed
 
 jobs:
-  build:
-
+  check-qa-feature:
+    if: ${{ startsWith(github.ref, 'refs/tags/feature**') }}
     runs-on: ubuntu-latest
     env:
       SONAR_URL: ${{ vars.SONAR_URL}}
       SONAR_TOKEN: ${{ vars.SONAR_TOKEN}}
-
     steps:
-    - uses: actions/checkout@v4
-      with:
-       ref: feature_manuel
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-    - name: Cacheado de Maven para acelerar el despliegue
-      uses: actions/cache@v1
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
-    - name: file-checks         
-      uses: ./.github/test/checks/
-    - name: junit-tests          
-      uses: ./.github/test/junit/
-    - name: sonarqube          
-      uses: ./.github/test/sonarqube/
-      env:
-        SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
-        SONAR_URL: ${{ vars.SONAR_URL }}
-    - name: execute merge
-      uses: "gsoc2/automerge-action@v0.16.2"
-      env:
-        GITHUB_TOKEN: "${{ secrets.TOKEN_PULLREQ }}"
-        MERGE_LABELS: ''
-        MERGE_REQUIRED_APPROVALS: "0" 
-        MERGE_METHOD: "rebase"
-        PULL_REQUEST: "${{github.event.pull_request.number}}"
-        LOG: "DEBUG"   
+      - uses: actions/checkout@v4
+        with:
+          ref: "${{ github.ref }}"
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: maven
+      - name: Cacheado de Maven para acelerar el despliegue
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: file-checks
+        uses: ./.github/test/checks/
+      - name: junit-tests
+        uses: ./.github/test/junit/
+      - name: sonarqube
+        uses: ./.github/test/sonarqube/
+        env:
+          SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
+          SONAR_URL: ${{ vars.SONAR_URL }}
+  automerge:
+    if: ${{ startsWith(github.ref, 'refs/tags/feature*') }}
+    runs-on: ubuntu-latest
+    env:
+        SONAR_URL: ${{ vars.SONAR_URL}}
+        SONAR_TOKEN: ${{ vars.SONAR_TOKEN}}
+    steps:
+      - name: execute merge
+        uses: "gsoc2/automerge-action@v0.16.2"
+        env:
+          GITHUB_TOKEN: "${{ secrets.TOKEN_PULLREQ }}"
+          MERGE_LABELS: ""
+          MERGE_REQUIRED_APPROVALS: "0"
+          MERGE_METHOD: "rebase"
+          PULL_REQUEST: "${{ github.event.pull_request.number }}"
+          LOG: "DEBUG"
+  check-qa-build:
+    if: ${{ startsWith(github.ref, 'refs/tags/dev**') }}
+    runs-on: ubuntu-latest
+    env:
+      SONAR_URL: ${{ vars.SONAR_URL}}
+      SONAR_TOKEN: ${{ vars.SONAR_TOKEN}}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: "${{ github.ref }}"
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: maven
+      - name: Cacheado de Maven para acelerar el despliegue
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: file-checks
+        uses: ./.github/test/checks/
+      - name: junit-tests
+        uses: ./.github/test/junit/
+      - name: sonarqube
+        uses: ./.github/test/sonarqube/
+        env:
+          SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
+          SONAR_URL: ${{ vars.SONAR_URL }}
+
 #    - name: cobertura-unit-test
-#      uses: ./.github/test/cobertura/ 
+#      uses: ./.github/test/cobertura/
