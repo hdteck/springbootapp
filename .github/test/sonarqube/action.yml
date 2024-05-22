@@ -12,7 +12,7 @@ runs:
     shell: bash
   - name: qualityGate status
     run: |
-        analysisID=`cat target/sonar/report-task.txt |grep ceTaskId |awk -F= '{ print $2 }'`
+        cat target/sonar/report-task.txt |grep ceTaskId |awk -F= '{ print $2 }'
         echo $analysisID
         if [[ ${qualityGateStatus} == "ERROR" ]]; then
         echo "Quality Gate FAILED"
