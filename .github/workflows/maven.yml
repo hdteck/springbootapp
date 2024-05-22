@@ -55,7 +55,8 @@ jobs:
         GITHUB_TOKEN: "${{ secrets.TOKEN_PULLREQ }}"
         MERGE_LABELS: "Automerge- ${{ github.event.issue.number }}"
         MERGE_COMMIT_MESSAGE: "Pullrequest- ${{ github.event.issue.number }}"
-        MERGE_REQUIRED_APPROVALS: "0"    
+        MERGE_REQUIRED_APPROVALS: "0" 
+        MERGE_METHOD: "rebase"   
 #    - name: cobertura-unit-test
 #      uses: ./.github/test/cobertura/ 
 
