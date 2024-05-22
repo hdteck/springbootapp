@@ -9,10 +9,12 @@
 name: SprintBoot app
 
 on:
-  push:
-    branches: [ "develop" ]
+#  push:
+#    branches: [ "develop" ]
   pull_request:
     branches: [ "develop" ]
+    types:
+      - opened 
 
 jobs:
   build:
@@ -44,7 +46,11 @@ jobs:
       uses: ./.github/test/sonarqube/
       env:
         SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
-        SONAR_URL: ${{ vars.SONAR_URL }}  
+        SONAR_URL: ${{ vars.SONAR_URL }}
+    - name: execute merge
+      uses: "gsoc2/automerge-action@v0.16.2"
+      env:
+        GITHUB_TOKEN: "${{ secrets.TOKEN_PULLREQ }}"    
 #    - name: cobertura-unit-test
 #      uses: ./.github/test/cobertura/ 
 
