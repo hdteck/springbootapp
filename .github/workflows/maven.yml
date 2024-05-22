@@ -57,7 +57,7 @@ jobs:
     env:
         SONAR_URL: ${{ vars.SONAR_URL}}
         SONAR_TOKEN: ${{ vars.SONAR_TOKEN}}
-      steps:
+    steps:
       - name: execute merge
         uses: "gsoc2/automerge-action@v0.16.2"
         env:
