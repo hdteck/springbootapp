@@ -8,7 +8,7 @@ runs:
     shell: bash
   - name: Sonar qualityGate
     run: mvn sonar-quality-gate:check -Dsonar.qualitygate.wait=true -Dsonar.projectKey=springbootapp -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN
-    continue-on-error: true
+    continue-on-error: 
     shell: bash
 #  - name: qualityGate status
 #    env:
