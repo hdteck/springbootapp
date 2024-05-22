@@ -15,4 +15,8 @@ runs:
       echo "no esta creado el directorio de test"
       fi
     shell: bash
+  - name: 'limpieza de la ejecucion anterior'
+    run: mvn clean:clean
+    shell: bash
+    
   
