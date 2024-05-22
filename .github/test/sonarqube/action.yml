@@ -11,11 +11,13 @@ runs:
     continue-on-error: true
     shell: bash
   - name: qualityGate status
+    env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     run: |
         taskID="$(cat target/sonar/report-task.txt |grep ceTaskId |awk -F= '{ print $2 }')"
         analysisID="$(curl --location  --max-redirs 10 --silent --fail --show-error --user "$SONAR_TOKEN": "$SONAR_URL/api/ce/task?id=$taskID" | jq -r '.task.analysisId')"
         qualityGateStatus="$(curl --location  --max-redirs 10 --silent --fail --show-error --user "$SONAR_TOKEN": "$SONAR_URL/api/qualitygates/project_status?analysisId=$analysisID" | jq -r '.projectStatus.status')"
-        if [[ ${qualityGateStatus} == "ERROR" ]]; then
+        if [[ ${qualityGateStatus} == "ERROR" && github.event.workflow_run.event == 'pull_request' ]]; then
         echo "Quality Gate FAILED"
         gh pr merge ${{ github.event.issue.number }} --admin --squash
         fi
