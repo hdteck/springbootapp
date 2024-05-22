@@ -54,10 +54,10 @@ jobs:
       env:
         GITHUB_TOKEN: "${{ secrets.TOKEN_PULLREQ }}"
         MERGE_LABELS: "Automerge"
-        MERGE_COMMIT_MESSAGE: "Pullrequest-${{ github.event.pull_request.comments }}"
+        MERGE_COMMIT_MESSAGE: "Pullrequest-${{ github.event.pull_request.number }}"
         MERGE_REQUIRED_APPROVALS: "0" 
         MERGE_METHOD: "rebase"
-        PULL_REQUEST: "${{github.event.pull_request.id}}"
+        PULL_REQUEST: "${{github.event.pull_request.number}}"
         LOG: "DEBUG"   
 #    - name: cobertura-unit-test
 #      uses: ./.github/test/cobertura/ 
