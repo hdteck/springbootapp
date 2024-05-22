@@ -23,7 +23,7 @@ on:
 
 jobs:
   check-qa-feature:
-    if: contains('feature', github.ref_name)
+    if: contains('${{github.ref_name}}', 'feature')
     runs-on: ubuntu-latest
     env:
       SONAR_URL: ${{ vars.SONAR_URL}}
