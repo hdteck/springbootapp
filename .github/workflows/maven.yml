@@ -37,7 +37,8 @@ jobs:
         env:
           STEPS_CONTEXT: ${{ toJson(steps) }}
         run: echo "$STEPS_CONTEXT"
-  check-qa-feature:
+  checkqafeature:
+    needs: one
     if: contains('${{github.ref_name}}', 'feature')
     runs-on: ubuntu-latest
     env:
@@ -69,8 +70,8 @@ jobs:
           SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
           SONAR_URL: ${{ vars.SONAR_URL }}
   automerge:
-    if: ${{contains('${{github.ref_name}}', 'feature')}}
-    needs: check-qa-feature
+    needs: 'checkqafeature'
+    if: contains('${{github.ref_name}}', 'feature')
     runs-on: ubuntu-latest
     env:
         SONAR_URL: ${{ vars.SONAR_URL}}
@@ -86,8 +87,8 @@ jobs:
           PULL_REQUEST: "${{ github.event.pull_request.number }}"
           LOG: "DEBUG"
   check-qa-build:
-    needs: automerge
-    if: ${{ (success('automerge'))  && contains('${{github.ref_name}}', 'develop')}}
+    needs: 'automerge'
+    if: contains('${{github.ref_name}}', 'develop')
     runs-on: ubuntu-latest
     env:
       SONAR_URL: ${{ vars.SONAR_URL}}
