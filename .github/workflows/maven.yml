@@ -41,9 +41,7 @@ jobs:
     needs: one
     if: contains('${{github.ref_name}}', 'feature')
     runs-on: ubuntu-latest
-  #  env:
-  #    SONAR_URL: ${{ vars.SONAR_URL}}
-   #   SONAR_TOKEN: ${{ vars.SONAR_TOKEN}}
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -73,9 +71,7 @@ jobs:
     needs: 'checkqafeature'
     if: contains('${{github.ref_name}}', 'feature')
     runs-on: ubuntu-latest
- #   env:
- #       SONAR_URL: ${{ vars.SONAR_URL}}
- #       SONAR_TOKEN: ${{ vars.SONAR_TOKEN}}
+
     steps:
       - name: execute merge
         uses: "gsoc2/automerge-action@v0.16.2"
@@ -90,9 +86,6 @@ jobs:
     needs: 'automerge'
     if: contains('${{github.ref_name}}', 'develop')
     runs-on: ubuntu-latest
-  #  env:
-  #   SONAR_URL: ${{ vars.SONAR_URL}}
-  #  SONAR_TOKEN: ${{ vars.SONAR_TOKEN}}
     steps:
       - uses: actions/checkout@v4
         with:
