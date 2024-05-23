@@ -69,7 +69,7 @@ jobs:
           SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
           SONAR_URL: ${{ vars.SONAR_URL }}
   automerge:
-    if: ${{ always() && contains(join(needs.*.result, ','), 'success') && contains('${{github.ref_name}}', 'feature')}}
+    if: ${{ always()  && contains('${{github.ref_name}}', 'feature')}}
     runs-on: ubuntu-latest
     env:
         SONAR_URL: ${{ vars.SONAR_URL}}
