@@ -69,8 +69,8 @@ jobs:
           SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
           SONAR_URL: ${{ vars.SONAR_URL }}
   automerge:
-    needs: check-qa-feature
     if: ${{ always() && (needs.check-qa-feature.result == 'success') && contains('${{github.ref_name}}', 'feature')}}
+    needs: check-qa-feature
     runs-on: ubuntu-latest
     env:
         SONAR_URL: ${{ vars.SONAR_URL}}
