@@ -69,7 +69,7 @@ jobs:
           SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
           SONAR_URL: ${{ vars.SONAR_URL }}
   automerge:
-    if: ${{ (needs.check-qa-feature.result == 'success') && contains('${{github.ref_name}}', 'feature')}}
+    if: ${{ (success('check-qa-feature')) && contains('${{github.ref_name}}', 'feature')}}
     needs: check-qa-feature
     runs-on: ubuntu-latest
     env:
@@ -87,7 +87,7 @@ jobs:
           LOG: "DEBUG"
   check-qa-build:
     needs: automerge
-    if: ${{ always() && (needs.automerge.result == 'success')  && contains('${{github.ref_name}}', 'develop')}}
+    if: ${{ (success('automerge'))  && contains('${{github.ref_name}}', 'develop')}}
     runs-on: ubuntu-latest
     env:
       SONAR_URL: ${{ vars.SONAR_URL}}
