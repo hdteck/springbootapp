@@ -85,7 +85,7 @@ jobs:
           PULL_REQUEST: "${{ github.event.pull_request.number }}"
           LOG: "DEBUG"
   check-qa-build:
-    if: ${{ always() && contains(join(needs.*.result, ','), 'success')  && contains('${{github.ref_name}}', 'develop')}}
+    if: ${{ always()  && contains('${{github.ref_name}}', 'develop')}}
     runs-on: ubuntu-latest
     env:
       SONAR_URL: ${{ vars.SONAR_URL}}
