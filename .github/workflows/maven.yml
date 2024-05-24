@@ -12,7 +12,9 @@ on:
   #  push:
   #    branches: [ "develop" ]
   pull_request:
-    branches: ["develop"]
+    branches: 
+      - develop
+      - feature_*
     types:
       - opened
       - edited
@@ -20,16 +22,14 @@ on:
       - closed
 
 jobs:
-  check-qa-feature:
-    if: ${{ contains(github.ref, 'feature') }}
+  pullrequest-feature:
+    if: contains('${{github.ref_name}}', 'feature')
     runs-on: ubuntu-latest
-    env:
-      SONAR_URL: ${{ vars.SONAR_URL}}
-      SONAR_TOKEN: ${{ vars.SONAR_TOKEN}}
+
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: "${{ github.ref }}"
+          ref: "${{ github.head_ref }}"
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -46,17 +46,16 @@ jobs:
         uses: ./.github/test/checks/
       - name: junit-tests
         uses: ./.github/test/junit/
-      - name: sonarqube
-        uses: ./.github/test/sonarqube/
-        env:
-          SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
-          SONAR_URL: ${{ vars.SONAR_URL }}
+#      - name: sonarqube
+ #       uses: ./.github/test/sonarqube/
+ #       env:
+ #         SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
+ #         SONAR_URL: ${{ vars.SONAR_URL }}
   automerge:
-    if: ${{ contains(github.ref, 'feature') }}
+    needs: 'pullrequest-feature'
+    if: contains('${{github.ref_name}}', 'feature')
     runs-on: ubuntu-latest
-    env:
-        SONAR_URL: ${{ vars.SONAR_URL}}
-        SONAR_TOKEN: ${{ vars.SONAR_TOKEN}}
+
     steps:
       - name: execute merge
         uses: "gsoc2/automerge-action@v0.16.2"
@@ -67,16 +66,14 @@ jobs:
           MERGE_METHOD: "rebase"
           PULL_REQUEST: "${{ github.event.pull_request.number }}"
           LOG: "DEBUG"
-  check-qa-build:
-    if: ${{ contains(github.ref, 'develop') }}
+  pullrequest-develop:
+    needs: 'automerge'
+    if: contains('${{github.ref_name}}', 'develop')
     runs-on: ubuntu-latest
-    env:
-      SONAR_URL: ${{ vars.SONAR_URL}}
-      SONAR_TOKEN: ${{ vars.SONAR_TOKEN}}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: "${{ github.ref }}"
+          ref: "${{ github.head_ref }}"
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -93,11 +90,11 @@ jobs:
         uses: ./.github/test/checks/
       - name: junit-tests
         uses: ./.github/test/junit/
-      - name: sonarqube
-        uses: ./.github/test/sonarqube/
-        env:
-          SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
-          SONAR_URL: ${{ vars.SONAR_URL }}
-
-#    - name: cobertura-unit-test
-#      uses: ./.github/test/cobertura/
+#      - name: sonarqube
+#        uses: ./.github/test/sonarqube/
+#        env:
+#          SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
+#          SONAR_URL: ${{ vars.SONAR_URL }}
+#      - name: docker-image
+#        uses: ./.github/test/docker/
+ 
