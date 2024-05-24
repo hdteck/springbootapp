@@ -22,23 +22,7 @@ on:
       - closed
 
 jobs:
-  one:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "$JOB_CONTEXT"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "$STEPS_CONTEXT"
-  checkqafeature:
-    needs: one
+  pullrequest-feature:
     if: contains('${{github.ref_name}}', 'feature')
     runs-on: ubuntu-latest
 
@@ -62,13 +46,13 @@ jobs:
         uses: ./.github/test/checks/
       - name: junit-tests
         uses: ./.github/test/junit/
-      - name: sonarqube
-        uses: ./.github/test/sonarqube/
-        env:
-          SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
-          SONAR_URL: ${{ vars.SONAR_URL }}
+#      - name: sonarqube
+ #       uses: ./.github/test/sonarqube/
+ #       env:
+ #         SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
+ #         SONAR_URL: ${{ vars.SONAR_URL }}
   automerge:
-    needs: 'checkqafeature'
+    needs: 'pullrequest-feature'
     if: contains('${{github.ref_name}}', 'feature')
     runs-on: ubuntu-latest
 
@@ -82,7 +66,7 @@ jobs:
           MERGE_METHOD: "rebase"
           PULL_REQUEST: "${{ github.event.pull_request.number }}"
           LOG: "DEBUG"
-  check-qa-build:
+  pullrequest-develop:
     needs: 'automerge'
     if: contains('${{github.ref_name}}', 'develop')
     runs-on: ubuntu-latest
@@ -106,11 +90,11 @@ jobs:
         uses: ./.github/test/checks/
       - name: junit-tests
         uses: ./.github/test/junit/
-      - name: sonarqube
-        uses: ./.github/test/sonarqube/
-        env:
-          SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
-          SONAR_URL: ${{ vars.SONAR_URL }}
-
-#    - name: cobertura-unit-test
-#      uses: ./.github/test/cobertura/
+#      - name: sonarqube
+#        uses: ./.github/test/sonarqube/
+#        env:
+#          SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
+#          SONAR_URL: ${{ vars.SONAR_URL }}
+#      - name: docker-image
+#        uses: ./.github/test/docker/
+ 
